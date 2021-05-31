@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using TransityEasy.Api.Core.Handlers;
 using TransityEasy.Api.Core.Models.Request;
@@ -32,8 +33,10 @@ namespace TransityEasy.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "TransitEasy API", Version = "v1" }));
-            services.AddControllers();
-
+            services.AddControllers().AddJsonOptions(opts =>
+            {
+                opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
             //options 
             services.Configure<TranslinkOptions>(Configuration.GetSection("TranslinkApi"));
 
@@ -46,7 +49,7 @@ namespace TransityEasy.Api
             });
 
             //handlers
-            services.AddTransient<IRequestHandler<NearbyStopsInfoRequest, IEnumerable<NearbyStopsInfoResult>>, NearbyStopsRequestHandler>();
+            services.AddTransient<IRequestHandler<NearbyStopsInfoRequest, NearbyStopsInfoResult>, NearbyStopsRequestHandler>();
 
         }
 

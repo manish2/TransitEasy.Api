@@ -9,6 +9,6 @@ namespace TransityEasy.Api.Core.Services
 {
     public interface ITranslinkApiService
     {
-        Task<List<StopsResponse>> GetNearbyStops(double latitude, double longitude, int radius); 
+        Task<StopsResponseResult> GetNearbyStops(double latitude, double longitude, int radius); 
     }
 }

@@ -3,8 +3,10 @@ using System.Net.Http;
 using Microsoft.Extensions.Options;
 using TransityEasy.Api.Core.Options;
 using TransityEasy.Api.Core.Models.ApiResponse;
-using System.Net.Http.Json;
 using System.Collections.Generic;
+using TransityEasy.Api.Core.Extensions;
+using System.Net;
+using Newtonsoft.Json;
 
 namespace TransityEasy.Api.Core.Services
 {
@@ -18,10 +20,20 @@ namespace TransityEasy.Api.Core.Services
             _translinkOptions = translinkOptions; 
         }
 
-        public async Task<List<StopsResponse>> GetNearbyStops(double latitude, double longitude, int radius)
+        public async Task<StopsResponseResult> GetNearbyStops(double latitude, double longitude, int radius)
         {
             var url = $"/rttiapi/v1/stops?apiKey={_translinkOptions.Value.ApiKey}&lat={latitude}&long={longitude}&radius={radius}";
-            return await _httpClient.GetFromJsonAsync<List<StopsResponse>>(url);
+            (var payload, var status) = await _httpClient.GetPayloadWithHttpCodeAsync(url, new HashSet<HttpStatusCode> { HttpStatusCode.NotFound });
+
+            if (status == HttpStatusCode.NotFound)
+                return JsonConvert.DeserializeObject<StopsResponseResult>(payload);
+
+            var data = JsonConvert.DeserializeObject<List<StopsResponseInfo>>(payload);
+
+            return new StopsResponseResult
+            {
+                StopsResponseInfo = data
+            }; 
         }
     }
 }

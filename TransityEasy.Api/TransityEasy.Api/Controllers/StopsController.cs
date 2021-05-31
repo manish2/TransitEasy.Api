@@ -13,15 +13,15 @@ namespace TransityEasy.Api.Controllers
     [ApiController, Route("api/[controller]")]
     public class StopsController : ControllerBase
     {
-        private readonly IRequestHandler<NearbyStopsInfoRequest, IEnumerable<NearbyStopsInfoResult>> _nearbyStopsInfoRequestHandler;
+        private readonly IRequestHandler<NearbyStopsInfoRequest, NearbyStopsInfoResult> _nearbyStopsInfoRequestHandler;
 
-        public StopsController(IRequestHandler<NearbyStopsInfoRequest, IEnumerable<NearbyStopsInfoResult>> nearbyStopsInfoRequestHandler)
+        public StopsController(IRequestHandler<NearbyStopsInfoRequest, NearbyStopsInfoResult> nearbyStopsInfoRequestHandler)
         {
             _nearbyStopsInfoRequestHandler = nearbyStopsInfoRequestHandler;
         }
 
         [HttpGet("getnearbystops")]
-        public async Task<ActionResult<IEnumerable<NearbyStopsInfoResult>>> GetNearbyStops(double currentLat, double currentLong, int radius)
+        public async Task<ActionResult<NearbyStopsInfoResult>> GetNearbyStops(double currentLat, double currentLong, int radius)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace TransityEasy.Api.Controllers
                 var result = await _nearbyStopsInfoRequestHandler.HandleRequest(request);
                 return Ok(result);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return StatusCode(500);
             }

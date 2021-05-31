@@ -8,22 +8,34 @@ using TransityEasy.Api.Core.Services;
 
 namespace TransityEasy.Api.Core.Handlers
 {
-    public class NearbyStopsRequestHandler : IRequestHandler<NearbyStopsInfoRequest, IEnumerable<NearbyStopsInfoResult>>
+    public class NearbyStopsRequestHandler : IRequestHandler<NearbyStopsInfoRequest, NearbyStopsInfoResult>
     {
         private readonly ITranslinkApiService _translinkApiService; 
         public NearbyStopsRequestHandler(ITranslinkApiService translinkApiService)
         {
             _translinkApiService = translinkApiService; 
         }
-        public async Task<IEnumerable<NearbyStopsInfoResult>> HandleRequest(NearbyStopsInfoRequest request)
+        public async Task<NearbyStopsInfoResult> HandleRequest(NearbyStopsInfoRequest request)
         {
             var apiResult = await _translinkApiService.GetNearbyStops(request.Latitude, request.Longitude, request.Radius);
-            return apiResult.Select(ConvertFromApiResult); 
+
+            if(apiResult.Code.HasValue)
+                return new NearbyStopsInfoResult {
+                    NearbyStopsInfo = Enumerable.Empty<NearbyStopsInfo>(),
+                    ResponseStatus = MapResponseCodes(apiResult.Code.Value)
+                }; 
+
+            var stopsInfo = apiResult.StopsResponseInfo.Select(ConvertFromApiResult);
+            return new NearbyStopsInfoResult
+            {
+                NearbyStopsInfo = stopsInfo,
+                ResponseStatus = StatusCode.Success
+            }; 
         }
 
-        private NearbyStopsInfoResult ConvertFromApiResult(StopsResponse response)
+        private NearbyStopsInfo ConvertFromApiResult(StopsResponseInfo response)
         {
-            return new NearbyStopsInfoResult
+            return new NearbyStopsInfo
             {
                 StopNo = response.StopNo,
                 Latitude = response.Latitude,
@@ -35,7 +47,16 @@ namespace TransityEasy.Api.Core.Handlers
                 Routes = ConvertCsvStringToList(response.Routes)
             }; 
         }
-
+        private StatusCode MapResponseCodes(TranslinkApiErrorCodes errorCode)
+        {
+            switch(errorCode)
+            {
+                case TranslinkApiErrorCodes.NoStopsFound:
+                    return StatusCode.NoStopsNearLocation;
+                default:
+                    return StatusCode.Success; 
+            }
+        }
         private IEnumerable<string> ConvertCsvStringToList(string csv) => csv.Split(',').Select(s => s.Trim()); 
     }
 }
