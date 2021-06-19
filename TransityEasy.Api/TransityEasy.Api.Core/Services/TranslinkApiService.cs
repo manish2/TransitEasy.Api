@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using TransityEasy.Api.Core.Extensions;
 using System.Net;
 using Newtonsoft.Json;
+using System;
 
 namespace TransityEasy.Api.Core.Services
 {
@@ -22,7 +23,9 @@ namespace TransityEasy.Api.Core.Services
 
         public async Task<StopsResponseResult> GetNearbyStops(double latitude, double longitude, int radius)
         {
-            var url = $"/rttiapi/v1/stops?apiKey={_translinkOptions.Value.ApiKey}&lat={latitude}&long={longitude}&radius={radius}";
+            var tranlinkLat = ToTranslinkLatLongFormat(latitude); 
+            var translinkLong = ToTranslinkLatLongFormat(longitude);
+            var url = $"/rttiapi/v1/stops?apiKey={_translinkOptions.Value.ApiKey}&lat={tranlinkLat}&long={translinkLong}&radius={radius}";
             (var payload, var status) = await _httpClient.GetPayloadWithHttpCodeAsync(url, new HashSet<HttpStatusCode> { HttpStatusCode.NotFound });
 
             if (status == HttpStatusCode.NotFound)
@@ -35,5 +38,8 @@ namespace TransityEasy.Api.Core.Services
                 StopsResponseInfo = data
             }; 
         }
+
+        //Translink is at max 6 decimal places
+        private double ToTranslinkLatLongFormat(double value) => Math.Truncate(1000000 * value) / 1000000;
     }
 }
