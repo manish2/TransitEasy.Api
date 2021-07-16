@@ -33,9 +33,11 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: AzureWebApp@1
+- task: AzureRmWebAppDeployment@4
   inputs:
-    azureSubscription: 'Microsoft Imagine'
-    appType: webAppLinux
-    appName: 'transiteasyapi2'
-    package: $(System.DefaultWorkingDirectory)/**/*.zip 
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Microsoft Imagine(15d9717a-c188-4b96-9477-5cfbafe18b5d)'
+    appType: 'webAppLinux'
+    WebAppName: 'transiteasyapi2'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    RuntimeStack: 'DOTNETCORE|5.0'
