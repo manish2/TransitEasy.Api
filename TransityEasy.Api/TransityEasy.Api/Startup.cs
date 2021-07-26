@@ -50,7 +50,7 @@ namespace TransityEasy.Api
 
             //handlers
             services.AddTransient<IRequestHandler<NearbyStopsInfoRequest, NearbyStopsInfoResult>, NearbyStopsRequestHandler>();
-
+            services.AddTransient<IRequestHandler<NextBusesScheduleRequest, NextBusStopInfoResult>, NextBusesScheduleRequestHandler>(); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
