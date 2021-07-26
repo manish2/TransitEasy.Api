@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransityEasy.Api.Core", "Tr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DB95FB80-6F4B-4EBC-BCF0-754F5F8D495E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransitEasy.Api.Core.Tests", "TransitEasy.Api.Core.Tests\TransitEasy.Api.Core.Tests.csproj", "{659DDA00-170F-45FF-843A-4A5712ABFCBA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{F39B178E-7464-4D1F-9D16-1B19A199EA75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F39B178E-7464-4D1F-9D16-1B19A199EA75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F39B178E-7464-4D1F-9D16-1B19A199EA75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{659DDA00-170F-45FF-843A-4A5712ABFCBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{659DDA00-170F-45FF-843A-4A5712ABFCBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{659DDA00-170F-45FF-843A-4A5712ABFCBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{659DDA00-170F-45FF-843A-4A5712ABFCBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
