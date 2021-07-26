@@ -39,6 +39,15 @@ namespace TransityEasy.Api.Core.Services
             }; 
         }
 
+        public async Task<List<StopEstimatesReponseInfo>> GetNextBusSchedules(int stopNumber, int numNextBuses)
+        {
+            var url = $"/rttiapi/v1/stops/{stopNumber}/estimates?apiKey={_translinkOptions.Value.ApiKey}&count={numNextBuses}";
+            (var payload, var status) = await _httpClient.GetPayloadWithHttpCodeAsync(url, null);
+
+            var data = JsonConvert.DeserializeObject<List<StopEstimatesReponseInfo>>(payload);
+            return data; 
+        }
+
         //Translink is at max 6 decimal places
         private double ToTranslinkLatLongFormat(double value) => Math.Truncate(1000000 * value) / 1000000;
     }
