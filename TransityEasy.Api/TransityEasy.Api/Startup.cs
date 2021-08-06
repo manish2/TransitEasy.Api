@@ -33,10 +33,7 @@ namespace TransityEasy.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "TransitEasy API", Version = "v1" }));
-            services.AddControllers().AddJsonOptions(opts =>
-            {
-                opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            });
+            services.AddControllers();
             //options 
             services.Configure<TranslinkOptions>(Configuration.GetSection("TranslinkApi"));
 
