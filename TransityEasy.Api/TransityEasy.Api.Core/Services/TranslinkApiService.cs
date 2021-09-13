@@ -13,11 +13,11 @@ namespace TransityEasy.Api.Core.Services
 {
     public class TranslinkApiService : ITranslinkApiService
     {
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly IOptionsSnapshot<TranslinkOptions> _translinkOptions; 
-        public TranslinkApiService(HttpClient client, IOptionsSnapshot<TranslinkOptions> translinkOptions)
+        public TranslinkApiService(IHttpClientFactory httpClientFactory, IOptionsSnapshot<TranslinkOptions> translinkOptions)
         {
-            _httpClient = client;
+            _httpClientFactory = httpClientFactory;
             _translinkOptions = translinkOptions; 
         }
 
@@ -26,7 +26,9 @@ namespace TransityEasy.Api.Core.Services
             var tranlinkLat = ToTranslinkLatLongFormat(latitude); 
             var translinkLong = ToTranslinkLatLongFormat(longitude);
             var url = $"/rttiapi/v1/stops?apiKey={_translinkOptions.Value.ApiKey}&lat={tranlinkLat}&long={translinkLong}&radius={radius}";
-            (var payload, var status) = await _httpClient.GetPayloadWithHttpCodeAsync(url, new HashSet<HttpStatusCode> { HttpStatusCode.NotFound });
+            var client = _httpClientFactory.CreateClient("TranslinkRttiApiClient");
+
+            (var payload, var status) = await client.GetPayloadWithHttpCodeAsync(url, new HashSet<HttpStatusCode> { HttpStatusCode.NotFound });
 
             if (status == HttpStatusCode.NotFound)
                 return JsonConvert.DeserializeObject<StopsResponseResult>(payload);
@@ -42,9 +44,22 @@ namespace TransityEasy.Api.Core.Services
         public async Task<List<StopEstimatesReponseInfo>> GetNextBusSchedules(int stopNumber, int numNextBuses)
         {
             var url = $"/rttiapi/v1/stops/{stopNumber}/estimates?apiKey={_translinkOptions.Value.ApiKey}&count={numNextBuses}";
-            (var payload, var status) = await _httpClient.GetPayloadWithHttpCodeAsync(url, null);
+            var client = _httpClientFactory.CreateClient("TranslinkRttiApiClient");
+
+            (var payload, var status) = await client.GetPayloadWithHttpCodeAsync(url, null);
 
             var data = JsonConvert.DeserializeObject<List<StopEstimatesReponseInfo>>(payload);
+            return data; 
+        }
+
+        public async Task<List<ServiceAlertResult>> GetServiceAlerts()
+        {
+            var url = "/api/allalerts";
+            var client = _httpClientFactory.CreateClient("TranlinkGatewayApiClient");
+
+            (var payload, var status) = await client.GetPayloadWithHttpCodeAsync(url, null);
+
+            var data = JsonConvert.DeserializeObject<List<ServiceAlertResult>>(payload);
             return data; 
         }
 

@@ -7,6 +7,7 @@ namespace TransityEasy.Api.Core.Services
     public interface ITranslinkApiService
     {
         Task<StopsResponseResult> GetNearbyStops(double latitude, double longitude, int radius);
-        Task<List<StopEstimatesReponseInfo>> GetNextBusSchedules(int stopNumber, int numNextBuses); 
+        Task<List<StopEstimatesReponseInfo>> GetNextBusSchedules(int stopNumber, int numNextBuses);
+        Task<List<ServiceAlertResult>> GetServiceAlerts(); 
     }
 }

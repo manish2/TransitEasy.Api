@@ -37,13 +37,20 @@ namespace TransityEasy.Api
             //options 
             services.Configure<TranslinkOptions>(Configuration.GetSection("TranslinkApi"));
 
-            //http services 
-            services.AddHttpClient<ITranslinkApiService, TranslinkApiService>((svp, client) => {
+            //http clients 
+            services.AddHttpClient("TranslinkRttiApiClient", (svp, client) => {
                 var options = svp.GetRequiredService<IOptionsMonitor<TranslinkOptions>>();
                 client.BaseAddress = new Uri(options.CurrentValue.BaseApiUrl);
                 client.Timeout = TimeSpan.FromSeconds(options.CurrentValue.TimeoutInSec);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json")); 
             });
+            services.AddHttpClient("TranlinkGatewayApiClient", client => {
+                client.BaseAddress = new Uri("https://getaway.translink.ca");
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
+            //http services
+            services.AddTransient<ITranslinkApiService, TranslinkApiService>(); 
 
             //handlers
             services.AddTransient<IRequestHandler<NearbyStopsInfoRequest, NearbyStopsInfoResult>, NearbyStopsRequestHandler>();
