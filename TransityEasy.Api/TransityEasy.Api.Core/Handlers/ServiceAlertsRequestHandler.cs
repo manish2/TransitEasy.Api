@@ -6,11 +6,11 @@ using TransityEasy.Api.Core.Services;
 
 namespace TransityEasy.Api.Core.Handlers
 {
-    public class AlertsRequestHandler : IRequestHander<ServiceAlertsInfo>
+    public class ServiceAlertsRequestHandler : IRequestHandler<ServiceAlertsInfo>
     {
         private readonly ITranslinkApiService _translinkApiService;
 
-        public AlertsRequestHandler(ITranslinkApiService translinkApiService)
+        public ServiceAlertsRequestHandler(ITranslinkApiService translinkApiService)
         {
             _translinkApiService = translinkApiService; 
         }
@@ -18,11 +18,22 @@ namespace TransityEasy.Api.Core.Handlers
         public async Task<ServiceAlertsInfo> HandleRequest()
         {
             var serviceAlerts = await _translinkApiService.GetServiceAlerts();
-            var busAlerts = serviceAlerts.Where(sa => sa.Group == 3).Select(ConvertToServiceAlert);
+            var busAlerts = serviceAlerts
+                            .Where(sa => sa.Group == 3)
+                            .GroupBy(sa => $"{sa.RouteId} {sa.RouteLongName}")
+                            .ToDictionary(group => group.Key, group => ConvertToServiceAlert(group));
+
             var westCoastExpressAlerts = serviceAlerts.Where(sa => sa.Group == 2).Select(ConvertToServiceAlert);
             var seaBusAlerts = serviceAlerts.Where(sa => sa.Group == 4).Select(ConvertToServiceAlert);
-            var stationAccessAlerts = serviceAlerts.Where(sa => sa.Group == 6).Select(ConvertToServiceAlert);
-            var skytrainAlerts = serviceAlerts.Where(sa => sa.Group == 1).Select(ConvertToServiceAlert);
+            var stationAccessAlerts = serviceAlerts
+                                     .Where(sa => sa.Group == 6)
+                                     .GroupBy(sa => sa.StationName)
+                                     .ToDictionary(group => group.Key, group => ConvertToServiceAlert(group));
+
+            var skytrainAlerts = serviceAlerts
+                                .Where(sa => sa.Group == 1)
+                                .GroupBy(sa => $"{sa.RouteId} {sa.RouteLongName}")
+                                .ToDictionary(group => group.Key, group => ConvertToServiceAlert(group));
 
             return new ServiceAlertsInfo
             {
@@ -34,7 +45,16 @@ namespace TransityEasy.Api.Core.Handlers
             }; 
         }
 
-        private ServiceAlert ConvertToServiceAlert(ServiceAlertResult serviceAlertResult)
+        private ServiceAlert ConvertToServiceAlert(IGrouping<string, ServiceAlertResult> serviceAlertGroup)
+        {
+            return new ServiceAlert
+            {
+                Count = serviceAlertGroup.Count(),
+
+            }; 
+        }
+
+        private ServiceAlert ConvertToServiceAlert(ServiceAlertResult result)
         {
             return new ServiceAlert
             {

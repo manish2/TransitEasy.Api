@@ -11,9 +11,11 @@ namespace TransityEasy.Api.Controllers
     public class StopsController : ControllerBase
     {
         private readonly IRequestHandler<NearbyStopsInfoRequest, NearbyStopsInfoResult> _nearbyStopsInfoRequestHandler;
-        private readonly IRequestHandler<NextBusesScheduleRequest, NextBusStopInfoResult> _nextBusScheduleRequestHandler; 
-
-        public StopsController(IRequestHandler<NearbyStopsInfoRequest, NearbyStopsInfoResult> nearbyStopsInfoRequestHandler, IRequestHandler<NextBusesScheduleRequest, NextBusStopInfoResult> nextBusScheduleRequestHandler)
+        private readonly IRequestHandler<NextBusesScheduleRequest, NextBusStopInfoResult> _nextBusScheduleRequestHandler;
+        public StopsController(
+            IRequestHandler<NearbyStopsInfoRequest, NearbyStopsInfoResult> nearbyStopsInfoRequestHandler,
+            IRequestHandler<NextBusesScheduleRequest, NextBusStopInfoResult> nextBusScheduleRequestHandler,
+            IRequestHandler<ServiceAlertsInfo> serviceAlertsReuestHandler)
         {
             _nearbyStopsInfoRequestHandler = nearbyStopsInfoRequestHandler;
             _nextBusScheduleRequestHandler = nextBusScheduleRequestHandler;
