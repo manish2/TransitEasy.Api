@@ -7,10 +7,10 @@ namespace TransityEasy.Api.Core.Models.Result
     {
         public Dictionary<string, ServiceAlert> BusAlerts { get; set; }
         public Dictionary<string, ServiceAlert> SkytrainAlerts { get; set; }
-        public IEnumerable<ServiceAlert> WestCoastExpressAlerts { get; set; }
-        public IEnumerable<ServiceAlert> SeaBusAlerts { get; set; }
-        public IEnumerable<ServiceAlert> HandyDARTAlerts { get; set; }
+        public ServiceAlert WestCoastExpressAlerts { get; set; }
+        public ServiceAlert SeaBusAlerts { get; set; }
+        public ServiceAlert HandyDARTAlerts { get; set; }
         public Dictionary<string, ServiceAlert> StationAccessAlerts { get; set; }
-        public IEnumerable<ServiceAlert> InformationServicesAlerts { get; set; }
+        public ServiceAlert InformationServicesAlerts { get; set; }
     }
 }
