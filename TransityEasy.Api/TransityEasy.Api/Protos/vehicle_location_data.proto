@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option csharp_namespace = "TransityEasy.Api.Protos";
+
+package vehicle_location_data;
+
+service VehiclesLocationData {
+  rpc GetLocations (VehiclesLocationRequest) returns (stream VehiclesLocationResponse);
+}
+
+message VehiclesLocationRequest {
+  int32 routeNo = 1;
+  int32 stopNumber = 2;
+  int32 refreshTimeInSec = 3;
+}
+
+message VehiclesLocationResponse {
+  repeated VehiclePosition positions = 1; 
+  enum StatusCode {
+	Success = 0;
+	NoneFound = 1;
+  }
+  StatusCode status = 2; 
+}
+
+message VehiclePosition {
+	double latitude = 1; 
+	double longitude = 2;
+	int32 vehicleNo = 3; 
+	int32 tripId = 4; 
+	int32 routeNo = 5; 
+	string direction = 6; 
+	string destination = 7; 
+	string pattern = 8; 
+}

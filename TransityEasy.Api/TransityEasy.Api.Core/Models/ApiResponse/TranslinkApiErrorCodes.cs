@@ -16,6 +16,7 @@ namespace TransityEasy.Api.Core.Models.ApiResponse
         InvalidLatLong = 1011,
         NoStopsFound = 1012,
         RadiusTooLarge = 1014,
-        InvalidRouteNumber = 1015
+        InvalidRouteNumber = 1015,
+        NoBusesFound = 2011
     }
 }

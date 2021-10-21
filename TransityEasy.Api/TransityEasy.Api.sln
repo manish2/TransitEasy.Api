@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransityEasy.Api", "TransityEasy.Api\TransityEasy.Api.csproj", "{33371CB5-7BFD-484E-A110-B8FE461DD6E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransityEasy.Api", "TransityEasy.Api\TransityEasy.Api.csproj", "{33371CB5-7BFD-484E-A110-B8FE461DD6E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransityEasy.Api.Core", "TransityEasy.Api.Core\TransityEasy.Api.Core.csproj", "{F39B178E-7464-4D1F-9D16-1B19A199EA75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransityEasy.Api.Core", "TransityEasy.Api.Core\TransityEasy.Api.Core.csproj", "{F39B178E-7464-4D1F-9D16-1B19A199EA75}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DB95FB80-6F4B-4EBC-BCF0-754F5F8D495E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransitEasy.Api.Core.Tests", "TransitEasy.Api.Core.Tests\TransitEasy.Api.Core.Tests.csproj", "{659DDA00-170F-45FF-843A-4A5712ABFCBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransitEasy.Api.Core.Tests", "TransitEasy.Api.Core.Tests\TransitEasy.Api.Core.Tests.csproj", "{659DDA00-170F-45FF-843A-4A5712ABFCBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

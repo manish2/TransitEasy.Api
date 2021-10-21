@@ -63,6 +63,39 @@ namespace TransityEasy.Api.Core.Services
             return data; 
         }
 
+        public async Task<BusesLocationResponseResult> GetVehiclePositionsByRouteNo(int routeNo)
+        {
+            var url = $"/rttiapi/v1/buses?apikey={_translinkOptions.Value.ApiKey}&routeNo={routeNo}";
+            return await GetVehiclePositions(url);
+        }
+
+        public async Task<BusesLocationResponseResult> GetVehiclePositionsByStopNo(int stopNo)
+        {
+            var url = $"/rttiapi/v1/buses?apikey={_translinkOptions.Value.ApiKey}&stopNo={stopNo}";
+            return await GetVehiclePositions(url);
+        }
+
+        private async Task<BusesLocationResponseResult> GetVehiclePositions(string url)
+        {
+            try
+            {
+                var client = _httpClientFactory.CreateClient("TranslinkRttiApiClient");
+
+                (var payload, var status) = await client.GetPayloadWithHttpCodeAsync(url, new HashSet<HttpStatusCode> { HttpStatusCode.NotFound });
+
+                if (status == HttpStatusCode.NotFound)
+                    return JsonConvert.DeserializeObject<BusesLocationResponseResult>(payload);
+
+                var data = JsonConvert.DeserializeObject<List<BusLocationResponseInfo>>(payload);
+
+                return new BusesLocationResponseResult { LocationsResponseInfo = data };
+            }
+            catch(Exception e)
+            {
+                throw;
+            }
+        }
+
         //Translink is at max 6 decimal places
         private double ToTranslinkLatLongFormat(double value) => Math.Truncate(1000000 * value) / 1000000;
     }

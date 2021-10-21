@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TransityEasy.Api.Core.Models.ApiResponse;
@@ -10,14 +11,17 @@ namespace TransityEasy.Api.Core.Handlers
     public class ServiceAlertsRequestHandler : IRequestHandler<ServiceAlertsInfo>
     {
         private readonly ITranslinkApiService _translinkApiService;
+        private readonly ILogger<ServiceAlertsRequestHandler> _logger;
 
-        public ServiceAlertsRequestHandler(ITranslinkApiService translinkApiService)
+        public ServiceAlertsRequestHandler(ITranslinkApiService translinkApiService, ILogger<ServiceAlertsRequestHandler> logger)
         {
-            _translinkApiService = translinkApiService; 
+            _translinkApiService = translinkApiService;
+            _logger = logger;
         }
 
         public async Task<ServiceAlertsInfo> HandleRequest()
         {
+            _logger.LogInformation("Handling ServiceAlertsInfo Request"); 
             var serviceAlerts = await _translinkApiService.GetServiceAlerts();
             var busAlerts = serviceAlerts
                             .Where(sa => sa.Group == 3)

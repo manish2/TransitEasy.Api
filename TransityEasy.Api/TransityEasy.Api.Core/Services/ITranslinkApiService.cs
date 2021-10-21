@@ -8,6 +8,8 @@ namespace TransityEasy.Api.Core.Services
     {
         Task<StopsResponseResult> GetNearbyStops(double latitude, double longitude, int radius);
         Task<List<StopEstimatesReponseInfo>> GetNextBusSchedules(int stopNumber, int numNextBuses);
-        Task<List<ServiceAlertResult>> GetServiceAlerts(); 
+        Task<List<ServiceAlertResult>> GetServiceAlerts();
+        Task<BusesLocationResponseResult> GetVehiclePositionsByRouteNo(int routeNo);
+        Task<BusesLocationResponseResult> GetVehiclePositionsByStopNo(int stopNo);
     }
 }
