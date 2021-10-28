@@ -35,8 +35,10 @@ namespace TransityEasy.Api.Services
                     }
                     else
                     {
-                        var response = new VehiclesLocationResponse();
-                        response.Status = VehiclesLocationResponse.Types.StatusCode.Success;
+                        var response = new VehiclesLocationResponse
+                        {
+                            Status = VehiclesLocationResponse.Types.StatusCode.Success
+                        };
                         var locations = apiResponse.LocationsResponseInfo.Select(lri => new VehiclePosition { Latitude = lri.Latitude, Longitude = lri.Longitude, Destination = lri.Destination, Direction = lri.Direction, Pattern = lri.Pattern, TripId = lri.TripId });
 
                         foreach (var location in locations)

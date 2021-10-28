@@ -49,15 +49,21 @@ namespace TransityEasy.Api
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             });
 
-            //http services
-            services.AddTransient<ITranslinkApiService, TranslinkApiService>(); 
+            //services
+            services.AddTransient<ITranslinkApiService, TranslinkApiService>();
 
             //handlers
             services.AddTransient<IRequestHandler<NearbyStopsInfoRequest, NearbyStopsInfoResult>, NearbyStopsRequestHandler>();
             services.AddTransient<IRequestHandler<NextBusesScheduleRequest, NextBusStopInfoResult>, NextBusesScheduleRequestHandler>();
             services.AddTransient<IRequestHandler<ServiceAlertsInfo>, ServiceAlertsRequestHandler>();
+            services.AddTransient<IRequestHandler<RoutesInfoResult>, RoutesRequestHandler>();
+            services.AddTransient<IRequestHandler<VehiclesLocationRequest, VehiclesLocationResult>, VehicleLocationsRequestHandler>();
 
             services.AddGrpc();
+            services.AddSignalRCore();
+
+            //health check
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,12 +84,15 @@ namespace TransityEasy.Api
                    c.SwaggerEndpoint("/swagger/v1/swagger.json", env.ApplicationName);
                });
             app.UseRouting();
+            app.UseWebSockets();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<VehicleLocationsService>().EnableGrpcWeb();
 
                 endpoints.MapControllers();
+
+                endpoints.MapHealthChecks("/health");
             });
         }
     }
