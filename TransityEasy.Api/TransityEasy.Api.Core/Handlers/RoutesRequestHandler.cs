@@ -20,7 +20,12 @@ namespace TransityEasy.Api.Core.Handlers
             using var reader = new StreamReader(stream);
             using var csvDecoder = new CSVDecoderService(reader);
             var routeRecords = csvDecoder.GetRecords<Route>();
-            var mappedRoutes = routeRecords.Select(routeRecord => new RoutesInfo { RouteId = routeRecord.route_id, RouteLongName = routeRecord.route_long_name, RouteShortName = routeRecord.route_short_name }).ToList();
+            var mappedRoutes = routeRecords
+                .Select(routeRecord => new RoutesInfo { RouteId = routeRecord.route_id, RouteLongName = routeRecord.route_long_name, RouteShortName = routeRecord.route_short_name })
+                .Where(lri => !string.IsNullOrEmpty(lri.RouteShortName))
+                .OrderBy(lri => lri.RouteShortName)
+                .ToList();
+
             var result = new RoutesInfoResult { ResponseStatus = StatusCode.Success, RoutesInfo = mappedRoutes };
             return Task.FromResult(result);
         }

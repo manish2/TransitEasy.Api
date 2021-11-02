@@ -10,5 +10,6 @@ namespace TransityEasy.Api.Core.Models.ApiResponse
     {
         Success = 0,
         NoStopsNearLocation = 1,
+        NoVehiclesAvailable = 2,
     }
 }

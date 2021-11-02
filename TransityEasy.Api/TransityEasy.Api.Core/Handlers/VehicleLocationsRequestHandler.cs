@@ -19,10 +19,25 @@ namespace TransityEasy.Api.Core.Handlers
         {
             var isByRouteNo = request.RouteNo.HasValue;
             var result =  await (isByRouteNo ? _translinkApiService.GetVehiclePositionsByRouteNo(request.RouteNo.Value) : _translinkApiService.GetVehiclePositionsByRouteNo(request.StopNo.Value));
+            if(result.Code.HasValue)
+            {
+                return new VehiclesLocationResult {
+                    ResponseStatus = SetStatus(result.Code.Value)
+                };
+            }
             var mappedLocations = result.LocationsResponseInfo.Select(MapToVehicleLocation);
+
             return new VehiclesLocationResult {
                 VehicleLocations = mappedLocations
             }; 
+        }
+        private StatusCode SetStatus(TranslinkApiErrorCodes code)
+        {
+            return code switch
+            {
+                TranslinkApiErrorCodes.NoBusesFound => StatusCode.NoVehiclesAvailable,
+                _ => StatusCode.NoVehiclesAvailable,
+            };
         }
         private VehicleLocation MapToVehicleLocation(BusLocationResponseInfo info)
         {
@@ -32,7 +47,8 @@ namespace TransityEasy.Api.Core.Handlers
                 Pattern = info.Pattern,
                 TripId = info.TripId,
                 VehicleNo = info.VehicleNo,
-                Destination = info.Destination
+                Destination = info.Destination,
+                Direction = info.Direction
             }; 
         }
     }
