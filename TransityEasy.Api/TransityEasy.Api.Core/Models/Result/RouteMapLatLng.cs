@@ -9,9 +9,9 @@ namespace TransityEasy.Api.Core.Models.Result
 {
     public class RouteMapLatLng
     {
-        [JsonProperty("routeMapData")]
+        [JsonProperty("latitude")]
         public double Latitude { get; set; }
-        [JsonProperty("routeMapData")]
+        [JsonProperty("longitude")]
         public double Longitude { get; set; }
     }
 }
