@@ -51,6 +51,7 @@ namespace TransityEasy.Api
 
             //services
             services.AddTransient<ITranslinkApiService, TranslinkApiService>();
+            services.AddTransient<IKmlDecoderService, KmlDecoderService>(); 
 
             //handlers
             services.AddTransient<IRequestHandler<NearbyStopsInfoRequest, NearbyStopsInfoResult>, NearbyStopsRequestHandler>();

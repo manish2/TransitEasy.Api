@@ -82,13 +82,13 @@ namespace TransityEasy.Api.Core.Services
                 var client = _httpClientFactory.CreateClient("TranslinkRttiApiClient");
 
                 (var payload, var status) = await client.GetPayloadWithHttpCodeAsync(url, new HashSet<HttpStatusCode> { HttpStatusCode.NotFound });
-
+                
                 if (status == HttpStatusCode.NotFound)
                     return JsonConvert.DeserializeObject<BusesLocationResponseResult>(payload);
 
-                var data = JsonConvert.DeserializeObject<List<BusLocationResponseInfo>>(payload);
+                var busLocations = JsonConvert.DeserializeObject<List<BusLocationResponseInfo>>(payload);
 
-                return new BusesLocationResponseResult { LocationsResponseInfo = data };
+                return new BusesLocationResponseResult { LocationsResponseInfo = busLocations };
             }
             catch(Exception e)
             {

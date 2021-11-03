@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TransityEasy.Api.Core.Models.ApiResponse;
@@ -10,10 +12,14 @@ namespace TransityEasy.Api.Core.Handlers
 {
     public class VehicleLocationsRequestHandler : IRequestHandler<VehiclesLocationRequest, VehiclesLocationResult>
     {
-        private readonly ITranslinkApiService _translinkApiService; 
-        public VehicleLocationsRequestHandler(ITranslinkApiService translinkApiService)
+        private readonly ITranslinkApiService _translinkApiService;
+        private readonly IKmlDecoderService _kmlDecoderService;
+        private readonly ConcurrentDictionary<string, IEnumerable<IEnumerable<RouteMapLatLng>>> _routeMapCache; 
+        public VehicleLocationsRequestHandler(ITranslinkApiService translinkApiService, IKmlDecoderService kmlDecoderService)
         {
-            _translinkApiService = translinkApiService; 
+            _translinkApiService = translinkApiService;
+            _kmlDecoderService = kmlDecoderService;
+            _routeMapCache = new ConcurrentDictionary<string, IEnumerable<IEnumerable<RouteMapLatLng>>>(); 
         }
         public async Task<VehiclesLocationResult> HandleRequest(VehiclesLocationRequest request)
         {
@@ -26,9 +32,10 @@ namespace TransityEasy.Api.Core.Handlers
                 };
             }
             var mappedLocations = result.LocationsResponseInfo.Select(MapToVehicleLocation);
+            Task.WaitAll(mappedLocations.ToArray());
 
             return new VehiclesLocationResult {
-                VehicleLocations = mappedLocations
+                VehicleLocations = mappedLocations.Select(t => t.Result)
             }; 
         }
         private StatusCode SetStatus(TranslinkApiErrorCodes code)
@@ -39,8 +46,19 @@ namespace TransityEasy.Api.Core.Handlers
                 _ => StatusCode.NoVehiclesAvailable,
             };
         }
-        private VehicleLocation MapToVehicleLocation(BusLocationResponseInfo info)
+        private async Task<VehicleLocation> MapToVehicleLocation(BusLocationResponseInfo info)
         {
+            IEnumerable<IEnumerable<RouteMapLatLng>> latLongData;
+            if (_routeMapCache.ContainsKey(info.RouteMap.Href))
+            {
+                latLongData = _routeMapCache[info.RouteMap.Href];
+            }
+            else
+            {
+                latLongData = await _kmlDecoderService.DecodeKMZFromURL(info.RouteMap.Href);
+                _routeMapCache.TryAdd(info.RouteMap.Href, latLongData);
+            }
+
             return new VehicleLocation { 
                 Latitude = info.Latitude,
                 Longitude = info.Longitude,
@@ -48,7 +66,11 @@ namespace TransityEasy.Api.Core.Handlers
                 TripId = info.TripId,
                 VehicleNo = info.VehicleNo,
                 Destination = info.Destination,
-                Direction = info.Direction
+                Direction = info.Direction,
+                RouteMapData = new RouteMapData
+                {
+                    CoordinateData = latLongData
+                }
             }; 
         }
     }

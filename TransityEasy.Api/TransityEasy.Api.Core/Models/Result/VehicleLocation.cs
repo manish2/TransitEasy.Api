@@ -25,5 +25,7 @@ namespace TransityEasy.Api.Core.Models.Result
 		public string Destination { get; set; }
 		[JsonProperty("pattern")]
 		public string Pattern { get; set; }
+		[JsonProperty("routeMapData")]
+		public RouteMapData RouteMapData { get; set; }
 	}
 }

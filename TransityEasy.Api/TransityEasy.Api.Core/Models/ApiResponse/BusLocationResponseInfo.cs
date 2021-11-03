@@ -16,6 +16,6 @@ namespace TransityEasy.Api.Core.Models.ApiResponse
         public string Pattern { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-        //public string RouteMap { get; set; }
+        public RouteMap RouteMap { get; set; }
     }
 }
