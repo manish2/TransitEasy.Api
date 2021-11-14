@@ -64,8 +64,7 @@ namespace TransityEasy.Api.Core.Handlers
 
         private DateTime ConvertToDateTime(string input)
         {
-            var parsed = Convert.ToDateTime(input);
-            return DateTime.SpecifyKind(parsed, DateTimeKind.Local);
+            return Convert.ToDateTime(input);
         }
     }
 }
