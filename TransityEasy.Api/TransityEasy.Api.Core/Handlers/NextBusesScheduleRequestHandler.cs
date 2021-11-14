@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using TransityEasy.Api.Core.Models.ApiResponse;
 using TransityEasy.Api.Core.Models.Request;
@@ -47,6 +48,7 @@ namespace TransityEasy.Api.Core.Handlers
                 IsTripCancelled = schedule.CancelledTrip,
                 CountdownInMin = schedule.ExpectedCountdown,
                 ScheduleStatus = MapToStatus(schedule.ScheduleStatus),
+                ExpectedLeaveTime = ConvertToDateTime(schedule.ExpectedLeaveTime),   
                 Destination = schedule.Destination
             }; 
         }
@@ -58,6 +60,12 @@ namespace TransityEasy.Api.Core.Handlers
                 "+" => NextBusScheduleStatus.AHEAD,
                 _ => NextBusScheduleStatus.ONTIME,
             };
+        }
+
+        private DateTime ConvertToDateTime(string input)
+        {
+            var parsed = Convert.ToDateTime(input);
+            return DateTime.SpecifyKind(parsed, DateTimeKind.Local);
         }
     }
 }

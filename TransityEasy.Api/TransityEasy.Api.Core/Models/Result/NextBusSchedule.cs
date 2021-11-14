@@ -8,5 +8,6 @@ namespace TransityEasy.Api.Core.Models.Result
         public int CountdownInMin { get; set; }
         public NextBusScheduleStatus ScheduleStatus { get; set; }
         public string Destination { get; set; }
+        public DateTime ExpectedLeaveTime { get; set; }
     }
 }

@@ -92,7 +92,7 @@ namespace TransityEasy.Api
                 endpoints.MapGrpcService<VehicleLocationsService>().EnableGrpcWeb();
 
                 endpoints.MapControllers();
-
+                
                 endpoints.MapHealthChecks("/health");
             });
         }
