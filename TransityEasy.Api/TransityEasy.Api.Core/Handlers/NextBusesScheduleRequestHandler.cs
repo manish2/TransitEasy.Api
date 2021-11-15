@@ -49,6 +49,7 @@ namespace TransityEasy.Api.Core.Handlers
                 CountdownInMin = schedule.ExpectedCountdown,
                 ScheduleStatus = MapToStatus(schedule.ScheduleStatus),
                 ExpectedLeaveTime = ConvertToDateTime(schedule.ExpectedLeaveTime),   
+                DisplayLeaveTime = schedule.ExpectedLeaveTime,
                 Destination = schedule.Destination
             }; 
         }

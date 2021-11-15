@@ -9,5 +9,6 @@ namespace TransityEasy.Api.Core.Models.Result
         public NextBusScheduleStatus ScheduleStatus { get; set; }
         public string Destination { get; set; }
         public DateTime ExpectedLeaveTime { get; set; }
+        public string DisplayLeaveTime { get; set; }
     }
 }
